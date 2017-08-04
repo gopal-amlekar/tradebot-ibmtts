@@ -1,0 +1,43 @@
+{
+ "StockData":
+ [
+ {
+	"name": "Apple",
+	"lower_limit": 500,
+	"upper_limit": 750,
+	"maxChange": 7
+ 
+ },
+ 
+ 
+ {
+	"name": "Google",
+	"lower_limit": 2500,
+	"upper_limit": 2820,
+	"maxChange": 3
+ },
+  
+ 
+ {
+	"name": "Amazon",
+	"lower_limit": 1500,
+	"upper_limit": 1790,
+	"maxChange": 4
+ }, 
+
+ {
+	"name": "Facebook",
+	"lower_limit": 50,
+	"upper_limit": 82,
+	"maxChange": 10
+ }, 
+
+ {
+	"name": "Yahoo",
+	"lower_limit": 230,
+	"upper_limit": 320,
+	"maxChange": 8
+ }
+
+]
+}
