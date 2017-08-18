@@ -98,14 +98,14 @@ Click on 'SAVE' (on left side) and then click on 'Start module' to start running
 
 #### Step 10:
 
-The newly create function is now running as you can see in the log messages.
+The newly created function is now running as you can see in the log messages. If you wish, you can test it using the sample testload shown on left hand side.
 
 ![](screenshots/pubnub_tts_12.png)
 
 ### Running the app
 
 We have created IBM Text to Speech service instance and also deployed a PubNub function for accessing the service. Now let's go ahead and run our Tradebot app.
-Before you run the code, make sure you have [Node.js](https://nodejs.org/en/) installed on your computer. 
+Before you run the code, make sure you have [Node.js V6.11.1+](https://nodejs.org/en/) installed on your computer. 
 
 #### Step 11:
 
@@ -130,11 +130,11 @@ Note that we had used channel name as 'Tradebot_Channel' earlier while creating 
 
 #### Step 14:
 
-Run the script tradebot.js first to subscribe to PubNub messages.
+Run the script tradebot.js first to subscribe to PubNub messages. It should output a message indicating that it has subscribed to the required channel.
 ```
 node tradebot.js
 ```
-It should output a message indicating that it has subscribed to the required channel.
+
 
 #### Step 15:
 In another terminal window run the stock simulating script.
