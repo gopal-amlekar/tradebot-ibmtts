@@ -57,6 +57,8 @@ Click on the keyset and copy both the publish and subscribe keys. We will need t
 
 ![](screenshots/pubnub_tts_4.png)
 
+#### Step 7:
+
 Go to 'FUNCTIONS' (on the left side bar). There are no modules for the newly created app yet.
 
 ![](screenshots/pubnub_tts_5.png)
@@ -69,7 +71,7 @@ The module is created now.
 
 ![](screenshots/pubnub_tts_7.png)
 
-#### Step 7:
+#### Step 8:
 
 Now we will create a function inside this module. Click on the newly created module. There are no functions for this module yet.
 Create a new function by clicking on '+ CREATE'.
@@ -85,18 +87,18 @@ Give the channel name as 'Tradebot_Channel'.
 The newly created function will have some default code.
 ![](screenshots/pubnub_tts_10.png)
 
-#### Step 8:
+#### Step 9:
 
 Replace the default code with contents of the [PubNub Function code](pubnub/pubnub_function.js)
 
-#### Step 9:
+#### Step 10:
 
 On lines 10 and 11 of this function code, replace the username and password with your IBM Text to Speech service credentials.
 Click on 'SAVE' (on left side) and then click on 'Start module' to start running the function.
 
 ![](screenshots/pubnub_tts_11.png)
 
-#### Step 10:
+#### Step 11:
 
 The newly created function is now running as you can see in the log messages. If you wish, you can test it using the sample testload shown on left hand side.
 
@@ -107,17 +109,17 @@ The newly created function is now running as you can see in the log messages. If
 We have created IBM Text to Speech service instance and also deployed a PubNub function for accessing the service. Now let's go ahead and run our Tradebot app.
 Before you run the code, make sure you have [Node.js V6.11.1+](https://nodejs.org/en/) installed on your computer. 
 
-#### Step 11:
+#### Step 12:
 
 Clone or download this github repo.
 
-#### Step 12:
+#### Step 13:
 
 Install required modules.
 
 ```npm install```
 
-#### Step 13:
+#### Step 14:
 Configure your local environment
 Create a text file in the 'app' folder and name it as ‘.env’. Populate the file with your PubNub keys and chanel name as shown below.
 Replace the PubNub keys with the publish and subscribe keys obtained in step 6 above.
@@ -128,15 +130,14 @@ PUB_NUB_SUBSCRIBE_KEY = 'YOUR_PUBNUB_SUBSCRIBE_KEY'
 ```
 Note that we had used channel name as 'Tradebot_Channel' earlier while creating PubNub function. The same name should appear in this file. Channel names are case sensitive.
 
-#### Step 14:
+#### Step 15:
 
 Run the script tradebot.js first to subscribe to PubNub messages. It should output a message indicating that it has subscribed to the required channel.
 ```
 node tradebot.js
 ```
 
-
-#### Step 15:
+#### Step 16:
 In another terminal window run the stock simulating script.
  ```
  node stockexchange.js
@@ -145,6 +146,5 @@ In another terminal window run the stock simulating script.
 The other script tradebot.js will now receive and playback a welcome audio message.
 
 Wait for a while and you will see the stock prices getting changed. Once a stock price moves beyond threshold, you should hear corresponding speech message from the trading bot script. Note that since the price movement is random, you may have to wait a while before a stock crosses some threshold.
-
 
 If you are interested in knowing how the app works or how to customize the app, the [README](app/README.md) file in app folder has more details.
