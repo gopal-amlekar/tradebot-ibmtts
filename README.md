@@ -87,7 +87,7 @@ The newly created function will have some default code.
 
 #### Step 8:
 
-Replace the default code with contents of the ![PubNub Function code](pubnub/pubnub_function.js)
+Replace the default code with contents of the [PubNub Function code](pubnub/pubnub_function.js)
 
 #### Step 9:
 
