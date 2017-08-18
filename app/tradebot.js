@@ -33,7 +33,7 @@ try
 		{
 			var message = msg.message;	// msg.message is the json object received
 			
-			console.log ("Message recd for event: ", message['event']);
+			console.log ("Speech Message recd for event: ", message['event']);
 			//console.log (message);
 			var Speech_File_Path = message['speech'];	// The URL of speech file returned by IBM Watson TTS API
 			var speechFile = 'tts.wav';					// Filename for local storage and download. Gets overwritten every time

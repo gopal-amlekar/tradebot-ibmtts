@@ -1,18 +1,22 @@
 'use strict';
-require('dotenv').load();
 
+// dotenv module uses local file named '.env' to load the environment variables for this script
+require('dotenv').load();
 const PUB_NUB_CHANNEL_KEY = process.env.PUB_NUB_CHANNEL_KEY;
 const PUB_NUB_PUBLISH_KEY= process.env.PUB_NUB_PUBLISH_KEY;		
 const PUB_NUB_SUBSCRIBE_KEY = process.env.PUB_NUB_SUBSCRIBE_KEY;	
 
-var PN = require("pubnub");
-var chance = require('chance').Chance();
+var PN = require("pubnub");					// Used for receiving published messages
+var chance = require('chance').Chance();	// Used for generating random numbers
 
+// Put in a try-catch block
 try
 {
+	// Read configuration for stocks and their thresholds to be checked for
 	var stocks  = require('./stocks.json');
 	var StockData=[];
 
+	// Populate data in a list and set an initial price for the stock randomly between upper and lower threshold
 	for (var counter = 0; counter < (stocks["StockData"].length); counter++)
 	{
 		StockData[counter] = stocks["StockData"][counter];
@@ -29,6 +33,7 @@ catch (err)
 
 try
 {
+	// Send an initial message to indicate starting of stock market
 	//For expressive SSML (express-as), only en-US_AllisonVoice is supported
 	var message =
 	{
@@ -55,40 +60,24 @@ catch (err)
 		
 function StockSimulate()
 {
-	//setInterval(function(){
-
+	// Randomly pick up a stock to manipulate
 	var StockIndex = chance.natural({min: 0, max:StockData.length-1});
-	//StockIndex = 0;
-	//console.log (StockData[StockIndex].name);
-
-	//console.log (StockData[StockIndex].price);
 	StockData[StockIndex].prev_price = StockData[StockIndex].price;
+	//console.log (StockData[StockIndex].name);
+	//console.log (StockData[StockIndex].price);
 
-
+	// Randomly update the price in either direction (up or down)
 	var ChangeFactor = chance.natural({min:0, max:StockData[StockIndex].maxChange});
-	//console.log (ChangeFactor);
-	//var PriceChange = (ChangeFactor)/100;
 	var dir = chance.bool();
 	if (dir === false)
 		ChangeFactor *= -1;
 		
-	//console.log (ChangeFactor);
-
 	var PriceChange = (StockData[StockIndex].price*ChangeFactor) / 100;
 	//console.log (PriceChange);
 
 	StockData[StockIndex].price = StockData[StockIndex].price + PriceChange;
 
-	//StockData[StockIndex].price = chance.natural({min:StockData[StockIndex].min_price , max:StockData[StockIndex].max_price});
 	console.log (StockData[StockIndex].name + ": " + StockData[StockIndex].price.toFixed(2) + " Change: " + ChangeFactor + "%");
-	/*
-		var TextToSpeak = "<speak><express-as type='Apology'>";
-		TextToSpeak += StockData[StockIndex].name + " crossed lower limit. It is trading at: ";
-		TextToSpeak += "<say-as interpret-as='number'>" + StockData[StockIndex].price.toFixed(2) + "/say-as>.";
-		TextToSpeak += "</express-as></speak>";
-		
-		console.log (TextToSpeak);
-	*/
 	
 	//Guard against too high / too low spikes
 	if (StockData[StockIndex].price < StockData[StockIndex].min_price)
@@ -98,15 +87,13 @@ function StockSimulate()
 	
 	if (StockData[StockIndex].price < StockData[StockIndex].lower_limit) 
 	{
-		console.log ("PRICE CROSSED LOWER LIMIT");
+		console.log ("ALERT: Lower limit crossed for stock: ", StockData[StockIndex].name);
 		
-		//var TextToSpeak = "<speak><express-as type='Apology'>";
 		var TextToSpeak = "<speak>";
 		TextToSpeak += StockData[StockIndex].name + " crossed lower limit. It is trading at: ";
 		TextToSpeak += "<say-as interpret-as='number'>" + StockData[StockIndex].price.toFixed(2) + "</say-as>.";
 		TextToSpeak += "</speak>";
 		
-		//console.log (TextToSpeak);
 		
 		var message =
 		{
@@ -122,7 +109,7 @@ function StockSimulate()
 	}
 	else if (StockData[StockIndex].price > StockData[StockIndex].upper_limit)
 	{
-		console.log ("PRICE CROSSED UPPER LIMIT");
+		console.log ("ALERT: Upper limit crossed for stock: ", StockData[StockIndex].name);
 
 		var message =
 		{
@@ -134,43 +121,41 @@ function StockSimulate()
 		"Scrip_Name": StockData[StockIndex].name,
 		"Scrip_Price": StockData[StockIndex].price
 		}
+		
 		sendPNCommand(message);
-	}
-	
-	//setTimeout (StockSimulate, 20000);	//Keep repeating periodically
+	}	
 }
-
 
 
 function sendPNCommand (message)
 {
-
+	// Instantiate a new PubNub object
+	// Both publish and subscribe key are needed as we are publishing from this object. Subscribe key is mandatory
 	var pn = new PN
 	({
-		ssl           : true,  // <- enable TLS Tunneling over TCP
+		ssl           : true,
 		publish_key   : PUB_NUB_PUBLISH_KEY,
 		subscribe_key : PUB_NUB_SUBSCRIBE_KEY
 	});
 	
 	var output = message['message'];
-	//console.log ("Trying to send message");
+	//console.log ("Sending text message");
 	
 	pn.publish
 	({
 		channel   : PUB_NUB_CHANNEL_KEY,
 		message   : message
 	},
-	
+	// Callback when publish operation is finished
 	function (status, response)
 	{
-		//console.log ("Callback fired");
 		if (status.error)
 		{
 			console.log("Failed publish", status, response);
 		}
 		else
 		{
-			console.log("Published message");
+			console.log("Published text message");
 		}
 	});
 }
