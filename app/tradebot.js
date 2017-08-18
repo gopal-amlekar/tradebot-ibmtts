@@ -1,44 +1,45 @@
 'use strict';
-require('dotenv').load();
 
+// dotenv module uses local file named '.env' to load the environment variables for this script
+require('dotenv').load();
 const PUB_NUB_CHANNEL_KEY = process.env.PUB_NUB_CHANNEL_KEY;
 const PUB_NUB_SUBSCRIBE_KEY = process.env.PUB_NUB_SUBSCRIBE_KEY;	
 
-var request = require('request');
-const fs = require('fs');
+// Code to check presence of .env file  or validity of the keys in that file may be added here.
+
+var request = require('request');	// Used to stream audio from IBM Watson
+const fs = require('fs');			// Used to create an audio file locally
+
 var playerOpts={};
-var player = require('play-sound')(playerOpts);
-var PN = require('pubnub');
+var player = require('play-sound')(playerOpts);	// Used to play back the downloaded audio file
+var PN = require('pubnub');			// Used for receiving published messages
 
-
+// Put the code in a try-catch block
 try
 {
+	// Instantiate a new PubNub object. Subscribe key is mandatory. 
+	// Publish key is not required in this script as we are not publishing any messages
 	var pn = new PN
 	({
 		subscribeKey: PUB_NUB_SUBSCRIBE_KEY,
 		ssl: true
 	});
 	
+	// A listener is added for various events happening with PubNub object such as presence, join etc.
+	// Here we process only receipt of a message on subscribed channels
 	pn.addListener
 	({
 		message: function (msg)
 		{
-			var message = msg.message;
+			var message = msg.message;	// msg.message is the json object received
 			
-			console.log ("Message recd for ", message['event']);
+			console.log ("Message recd for event: ", message['event']);
 			//console.log (message);
-			/*
-			var Event = message.Event;
-			var Limit_Type = message['Limit_Type'];
-			var Limit_Value = message['Limit_Value'];
-			var Scrip_Name = message['Scrip_Name'];
-			var Scrip_Price = message['Scrip_Price'];
-			*/
-			var Speech_File_Path = message['speech'];
-			var speechFile = 'tts.wav';
-			//console.log (Event, Limit_Type, Limit_Value, Scrip_Name, Scrip_Price);
+			var Speech_File_Path = message['speech'];	// The URL of speech file returned by IBM Watson TTS API
+			var speechFile = 'tts.wav';					// Filename for local storage and download. Gets overwritten every time
+
+			// We use javascript promise to play the audio file when it has been completely downloaded
 			
-			//console.log (Speech_File_Path);			
 			let getSpeechPromise = new Promise((resolve, reject) => {
 				
 				var rq = request(Speech_File_Path);
@@ -46,38 +47,29 @@ try
 				var streamRequest = rq.pipe(fs.createWriteStream(speechFile));
 				
 				rq.on('response', function(resp){
-					//console.log(resp.headers);
 					//console.log(resp.statusCode);
+					// Various responses may be handled here such as if the file is not present etc.
 				});
 				
 				streamRequest.on('finish', function(){
 					//console.log ("Stream finished");
+					// Any other housekeeping when the file has been downloaded may be added here.
 					resolve(speechFile);
 				});
 				
 			});	
-			//console.log("Request done");	
-			getSpeechPromise.then((speechFile) => {
-			  // successMessage is whatever we passed in the resolve(...) function above.
-			  // It doesn't have to be a string, but if it is only a succeed message, it probably will be.
-			  //console.log("Yay! " + successMessage);
-					//var exec = require('child_process').exec;
-					//var cmd = 'aplay test.wav';
-					
+
+			getSpeechPromise.then((speechFile) => {					
 						player.play(speechFile, function (err) {
 						   if (err) throw err;
-						   console.log("Audio finished");
+						   //console.log("Audio finished");
+						   // Delete the file if required or move it somewhere else if required. Playback has been done.
 						});
-					/*
-					exec(cmd, function(error, stdout, stderr) {
-					  // command output is in stdout
-					  //console.log ("playing");
-					});
-					* */
 			});
 		} //end message function
 	});
 	
+	// Subscribe to the channel
 	pn.subscribe
 	({
 		channels: [PUB_NUB_CHANNEL_KEY]
