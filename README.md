@@ -10,7 +10,7 @@ To run this app, you will need to have your own IBM ID and a developer account o
 
 #### Step 1:
 
-Log on to IBM Bluemix with your IBM ID and go to catalog, then select "Text to Speech" under Watson services.
+Log on to [IBM Bluemix](https://console.bluemix.net/) with your IBM ID and go to catalog, then select "Text to Speech" under Watson services.
 
 ![](screenshots/ibm_tts_1.png)
 
@@ -38,7 +38,7 @@ The username and password are unique to your service instance created. Make note
 
 #### Step 4:
 
-Login to PubNub admin portal with your PubNub account.
+Login to [PubNub admin portal](https://admin.pubnub.com) with your PubNub account.
 
 
 #### Step 5:
