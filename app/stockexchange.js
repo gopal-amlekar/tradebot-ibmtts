@@ -49,18 +49,21 @@ catch (err)
 	console.log ("Exception in sending welcome message", err);
 }
 
+var simulation_interval = 10000;	// Start with a lower simulation frequency
 
 try
 {
-	setInterval(StockSimulate, 20000);
+	//setInterval(StockSimulate, simulation_interval);
+	setTimeout (StockSimulate, simulation_interval);
 }
 catch (err)
 {
 	console.log ("Exception in Simulating stock function", err);
 }
-		
+
 function StockSimulate()
 {
+	simulation_interval = 5000;		// Simulate every 5 seconds normally (20 seconds if threshold crossed)
 	// Randomly pick up a stock to manipulate
 	var StockIndex = chance.natural({min: 0, max:StockData.length-1});
 	StockData[StockIndex].prev_price = StockData[StockIndex].price;
@@ -106,16 +109,25 @@ function StockSimulate()
 		"Scrip_Name": StockData[StockIndex].name,
 		"Scrip_Price": StockData[StockIndex].price
 		}
+		
+		simulation_interval = 15000;	// Delay for audio conversion and playback
+		
 		sendPNCommand(message);
 	}
 	else if (StockData[StockIndex].price > StockData[StockIndex].upper_limit)
 	{
 		console.log ("ALERT: Upper limit crossed for stock: ", StockData[StockIndex].name);
 
+		var TextToSpeak = "<speak>";
+		TextToSpeak += StockData[StockIndex].name + " crossed upper limit. It is trading at: ";
+		TextToSpeak += "<say-as interpret-as='number'>" + StockData[StockIndex].price.toFixed(2) + "</say-as>.";
+		TextToSpeak += "</speak>";
+
 		var message =
 		{
 		"event": "Crossed Upper Limit",
-		"text": StockData[StockIndex].name + " crossed upper limit. It is trading at: " + StockData[StockIndex].price.toFixed(2),
+		//"text": StockData[StockIndex].name + " crossed upper limit. It is trading at: " + StockData[StockIndex].price.toFixed(2),
+		"text": TextToSpeak,
 		"Speaker_Voice": 'en-US_AllisonVoice',
 		"Limit_Type": "LIMIT_UPPER",
 		"Limit_Value": StockData[StockIndex].upper_limit,
@@ -123,8 +135,11 @@ function StockSimulate()
 		"Scrip_Price": StockData[StockIndex].price
 		}
 		
+		simulation_interval = 15000;	// Delay for audio conversion and playback
+		
 		sendPNCommand(message);
 	}	
+	setTimeout (StockSimulate, simulation_interval);
 }
 
 
