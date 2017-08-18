@@ -37,10 +37,11 @@ try
 	//For expressive SSML (express-as), only en-US_AllisonVoice is supported
 	var message =
 	{
-		"event": "Other",
+		"event": "Welcome Event",
 		"text": "<speak><express-as type='GoodNews'>The stock market is started. Have a nice Day!</express-as></speak>",
 		"Speaker_Voice": 'en-US_AllisonVoice'
 	}
+	console.log ("Welcome message: The stock market is started. Have a nice Day!");
 	sendPNCommand(message);
 }
 catch (err)
@@ -97,7 +98,7 @@ function StockSimulate()
 		
 		var message =
 		{
-		"event": "Crossed limit",
+		"event": "Crossed Lower Limit",
 		"text": TextToSpeak,
 		"Speaker_Voice": 'en-US_MichaelVoice',
 		"Limit_Type": "LIMIT_LOWER",
@@ -113,7 +114,7 @@ function StockSimulate()
 
 		var message =
 		{
-		"event": "Crossed limit",
+		"event": "Crossed Upper Limit",
 		"text": StockData[StockIndex].name + " crossed upper limit. It is trading at: " + StockData[StockIndex].price.toFixed(2),
 		"Speaker_Voice": 'en-US_AllisonVoice',
 		"Limit_Type": "LIMIT_UPPER",
@@ -139,7 +140,7 @@ function sendPNCommand (message)
 	});
 	
 	var output = message['message'];
-	//console.log ("Sending text message");
+	//console.log ("Sending text message: ", message.text);
 	
 	pn.publish
 	({
