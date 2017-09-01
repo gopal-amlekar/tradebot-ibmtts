@@ -110,7 +110,7 @@ function StockSimulate()
 		"Scrip_Price": StockData[StockIndex].price
 		}
 		
-		simulation_interval = 15000;	// Delay for audio conversion and playback
+		simulation_interval = 20000;	// Delay for audio conversion and playback
 		
 		sendPNCommand(message);
 	}
@@ -135,7 +135,7 @@ function StockSimulate()
 		"Scrip_Price": StockData[StockIndex].price
 		}
 		
-		simulation_interval = 15000;	// Delay for audio conversion and playback
+		simulation_interval = 20000;	// Delay for audio conversion and playback
 		
 		sendPNCommand(message);
 	}	

@@ -107,7 +107,7 @@ The newly created function is now running as you can see in the log messages. If
 ### Running the app
 
 We have created IBM Text to Speech service instance and also deployed a PubNub function for accessing the service. Now let's go ahead and run our Tradebot app.
-Before you run the code, make sure you have [Node.js V6.11.1+](https://nodejs.org/en/) installed on your computer. 
+Before you run the code, make sure you have [Node.js V6.11.1+](https://nodejs.org/en/) installed on your computer.
 
 #### Step 12:
 
@@ -119,8 +119,13 @@ Install required modules.
 
 ```npm install```
 
+#### *Note:*
+*If you are using Windows, you will additionally need to install a command line audio player. You can install [mplayer](https://mplayerhq.hu/design7/news.html) for which Windows binaries are available from [here](http://oss.netfarm.it/mplayer/). If you would like to try any other player, make sure that it is supported by the play-sound node module as listed [here](https://github.com/shime/play-sound).
+Once downloaded,you should copy the mplayer.exe file in the app folder.*
+
 #### Step 14:
-Configure your local environment
+
+Configure your local environment.
 Create a text file in the 'app' folder and name it as ‘.env’. Populate the file with your PubNub keys and chanel name as shown below.
 Replace the PubNub keys with the publish and subscribe keys obtained in step 6 above.
 ```
@@ -138,6 +143,7 @@ node tradebot.js
 ```
 
 #### Step 16:
+
 In another terminal window run the stock simulating script.
  ```
  node stockexchange.js
@@ -147,4 +153,9 @@ The other script tradebot.js will now receive and playback a welcome audio messa
 
 Wait for a while and you will see the stock prices getting changed. Once a stock price moves beyond threshold, you should hear corresponding speech message from the trading bot script. Note that since the price movement is random, you may have to wait a while before a stock crosses some threshold.
 
-If you are interested in knowing how the app works or how to customize the app, the [README](app/README.md) file in app folder has more details.
+
+#### Notes:
+
+* This demo was tested on Ubuntu and also on a Raspberry Pi 3. It should also work for Windows with the audio player installed manually as mentioned above in step 13. However, it has not been tested on Windows.
+
+* If you are interested in knowing how the app works or how to customize the app, the [README](app/README.md) file in app folder has more details.
